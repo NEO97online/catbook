@@ -71,7 +71,7 @@ app.get('/api/cat', async (req, res) => {
 });
 
 // serve static frontend from all other routes
-router.use(express.static(path.join(__dirname, '../client/build')))
+app.use(express.static(path.join(__dirname, '../client/build')))
 
 // start the server
 const port = process.env.PORT || 8080;
