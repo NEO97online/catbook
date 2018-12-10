@@ -20,17 +20,29 @@ const app = express();
 // configure a destination for file uploads
 const upload = multer({ dest: 'uploads/' });
 
+// we'll store the file path to the latest cat in memory
+let latestCat;
+
 // handle post requests with images to the /upload path
 app.post('/api/upload', upload.single('image'), async (req, res) => {
   try {
+    if (!req.file) {
+      res.send(500);
+      return;
+    }
+    
+    // get the file path uploaded via multer
+    const filePath = req.file.path;
+
     // send the image to gcloud for label detection
-    const results = await visionClient.labelDetection(req.file.path);
+    const results = await visionClient.labelDetection(filePath);
     const labels = results[0].labelAnnotations.map(x => x.description);
 
     // check if we can has cat
     const hazCat = labels.includes('cat');
 
     if (hazCat) {
+      latestCat = filePath;
       res.status(201).send('Thanx 4 has cat.');
     } else {
       res.status(400).send('No has cat!');
@@ -39,7 +51,16 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     console.error(err);
     res.sendStatus(500);
   }
-})
+});
+
+// handle get requests to retrieve the last uploaded cat
+app.get('/api/cat', async (req, res) => {
+  if (latestCat) {
+    res.sendFile(path.join(__dirname, latestCat));
+  } else {
+    res.status(404).send('No has any catz!');
+  }
+});
 
 // start the server
 const port = process.env.PORT || 8080;
