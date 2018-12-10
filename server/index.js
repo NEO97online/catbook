@@ -21,7 +21,7 @@ const app = express();
 const upload = multer({ dest: 'uploads/' });
 
 // handle post requests with images to the /upload path
-app.post('/upload', upload.single('image'), async (req, res) => {
+app.post('/api/upload', upload.single('image'), async (req, res) => {
   try {
     // send the image to gcloud for label detection
     const results = await visionClient.labelDetection(req.file.path);
