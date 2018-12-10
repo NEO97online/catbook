@@ -17,7 +17,15 @@ const visionClient = new ImageAnnotatorClient();
 // create express app
 const app = express();
 
-// configure a destination for file uploads
+// define path for file uploads
+const uploadPath = path.join(__dirname, 'uploads');
+
+// clear out any old uploads
+if (fs.existsSync(uploadPath)) {
+  fs.rmdirSync(uploadPath);
+}
+
+// configure multer to use the uploads folder
 const upload = multer({ dest: 'uploads/' });
 
 // we'll store the file path to the latest cat in memory
