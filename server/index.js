@@ -47,7 +47,9 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     // send the image to gcloud for label detection
     const results = await visionClient.labelDetection(filePath);
-    const labels = results[0].labelAnnotations.map(x => x.description);
+    const labels = results[0].labelAnnotations.map(x => x.description.toLowerCase());
+
+    console.log(labels);
 
     // check if we can has cat
     const hazCat = labels.includes('cat');

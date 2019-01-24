@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { Nav, NavItem, NavLink, Navbar, NavbarBrand } from 'reactstrap';
 import UploadButton from './upload-button';
 
 class App extends Component {
@@ -65,7 +65,6 @@ class App extends Component {
       // read the uploaded file
       const reader = new FileReader();
       reader.onload = (e) => {
-        console.log(e.target.result);
         if (success) {
           // shift the uploaded cat onto the state
           this.setState(prevState => ({
@@ -90,17 +89,16 @@ class App extends Component {
 
     return (
       <>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" color="inherit">
-              CatBook
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <Navbar color="light" light>
+          <NavbarBrand href="/">CatBook</NavbarBrand>
+          <Nav>
+            <NavItem>
+              <NavLink href="https://github.com/michaelauderer/catbook" target="_blank">GitHub</NavLink>
+            </NavItem>
+          </Nav>
+        </Navbar>
         <div style={{ padding: 32 }}>
-          {message && (
-            <Typography variant="h6" color="inherit">{message}</Typography>
-          )}
+          {message && <h6>{message}</h6>}
           {preview && (
             <div className="crossed">
               <img src={preview} alt="upload preview" style={{ maxHeight: 300 }} />
@@ -117,9 +115,7 @@ class App extends Component {
           <br />
           <hr />
           <br />
-          <Typography variant="h6" color="inherit">
-            Recent cats:
-          </Typography>
+          <h6>Recent cats:</h6>
           <br />
           {cats.map(cat => (
             <div key={cat.id}>

@@ -1,42 +1,35 @@
 import React, { PureComponent } from 'react';
-import { Button, CircularProgress, withStyles } from '@material-ui/core';
-
-const styles = theme => ({
-  wrapper: {
-    margin: theme.spacing.unit,
-    position: 'relative',
-  },
-  buttonProgress: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-});
+import { Button } from 'reactstrap';
 
 class UploadButton extends PureComponent {
+  fileInputRef = React.createRef();
+
+  handleClick = () => {
+    this.fileInputRef.current.click();
+  }
+
   render() {
-    const { children, classes, loading } = this.props;
+    const { children, loading } = this.props;
     
     return (
       <div>
         <input
+          ref={this.fileInputRef}
           accept="image/*"
           style={{display: 'none '}}
-          id="contained-button-file"
           type="file"
           onChange={this.props.onUpload}
         />
-        <label htmlFor="contained-button-file" className={classes.wrapper}>
-          <Button variant="contained" component="span" color="secondary" disabled={loading}>
-            {children}
-          </Button>
-          {loading && <CircularProgress size={24} color="secondary" className={classes.buttonProgress} />}
-        </label>
+        <Button 
+          color="primary" 
+          disabled={loading}
+          onClick={this.handleClick} 
+        >
+          {children}
+        </Button>
       </div>
     )
   }
 }
 
-export default withStyles(styles)(UploadButton);
+export default UploadButton;
